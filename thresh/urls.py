@@ -5,7 +5,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'thresh.main.views.home', name='home'),
+    url(r'^$', 'thresh.main.views.index', name='index'),
+    url(r'^create$', 'thresh.main.views.create', name='create'),
 
     # Examples:
     # url(r'^thresh/', include('thresh.foo.urls')),
