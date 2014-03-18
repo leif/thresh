@@ -1,15 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Currency(models.Model):
+    code   = models.CharField(max_length=3, unique=True)
+    name   = models.CharField(max_length=20, unique=True)
+    def __unicode__(self):
+        return self.name
+
 class Person(User):
-    def get_balance(self):
-        return sum( tx.amount for tx in self.transaction_set.all() )
+    def get_balance(self, currency):
+        return sum( tx.amount for tx in self.transaction_set.filter(currency=currency) )
 
 class Proposal(models.Model):
     title       = models.CharField(max_length=48)
     description = models.CharField(max_length=200)
     creator     = models.ForeignKey(Person)
     threshold   = models.IntegerField()
+    currency    = models.ForeignKey(Currency, default=1)
     created     = models.DateTimeField('date created', auto_now_add=True)
     expires     = models.DateTimeField('expiration date', null=True, blank=True)
     
@@ -23,11 +30,12 @@ class Pledge(models.Model):
     created  = models.DateTimeField('date created')
 
     def is_backed(self):
-        return self.amount <= self.person.get_balance()
+        return self.amount <= self.person.get_balance(self.proposal.currency)
 
 class Transaction(models.Model):
     person      = models.ForeignKey(Person)
     amount      = models.IntegerField()
+    currency    = models.ForeignKey(Currency)
     description = models.CharField(max_length=200)
     datetime    = models.DateTimeField('date')
     pledge      = models.ForeignKey(Pledge, null=True)
