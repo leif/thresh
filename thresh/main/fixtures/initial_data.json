@@ -1,0 +1,25 @@
+[
+  {
+    "model": "main.Currency",
+    "pk"   : 1,
+    "fields": {
+        "name": "Bitcoin",
+        "code": "BTC" } },
+  {
+    "model": "main.Currency",
+    "pk"   : 2,
+    "fields": {
+        "name": "Euros",
+        "code": "EUR" } },
+  {
+    "model": "main.Currency",
+    "pk"   : 3,
+    "fields": {
+        "name": "US Dollars",
+        "code": "USD" } },
+  {
+    "model": "main.Person",
+    "fields": {
+        "username": "Someone",
+        "password": "pass" } }
+]
