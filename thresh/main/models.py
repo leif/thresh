@@ -19,7 +19,7 @@ class Proposal(models.Model):
     currency    = models.ForeignKey(Currency, default=1)
     created     = models.DateTimeField('date created', auto_now_add=True)
     expires     = models.DateTimeField('expiration date', null=True, blank=True)
-    
+
     def get_percent_backed(self):
         return sum( pledge.amount for pledge in self.pledge_set.all() if pledge.is_backed() ) / float( self.threshold )
 

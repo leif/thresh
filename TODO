@@ -1,0 +1,10 @@
+* repo structure refactoring
+ * the django project (thresh) should be an example project (or submodule) instead of the root directory of the django application (main)
+ * requirements.txt should be in the directory above the django application
+ * mv this TODO to the directory above the django application
+ * create setup.py for the application
+
+* django-registration-templates: fork it and create setup.py so it can be just installed with the requirements instead of having a git submodule
+
+* bugs
+ * index.html shows "log in" instead of "logged in" after being logged in

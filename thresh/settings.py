@@ -110,7 +110,6 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.dirname( os.path.realpath( __file__ ) ) + '/templates'
 )
 
 INSTALLED_APPS = (
@@ -125,7 +124,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'thresh.main',
-    'dummyadmin'
+    'dummyadmin',
+    'registration'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -156,3 +156,30 @@ LOGGING = {
         },
     }
 }
+
+# Override the default behaviour, redirect to the index page instead of
+# /accounts/profile
+LOGIN_REDIRECT_URL = 'index'
+
+# Project and application paths
+# thresh/thresh/settings.py
+PRJ_PATH = os.path.dirname(__file__)
+# thresh
+ROOT_PRJ_PATH = os.path.normpath(os.path.join(PRJ_PATH, '..'))
+# thresh/thresh/main
+# APP_PATH = os.path.normpath(os.path.join(PRJ_PATH, 'main'))
+
+# for https://github.com/macdhuibh/django-registration-templates
+# django-registration-templates is expected to be inside project root directory
+# and can be added running:
+# git submodule init
+# git submodule update
+REGISTRATION_TEMPLATE_DIR = os.path.join(
+    ROOT_PRJ_PATH,
+    "django-registration-templates"
+)
+
+TEMPLATE_DIRS = (
+    os.path.join(PRJ_PATH, "templates"),
+    REGISTRATION_TEMPLATE_DIR,
+)

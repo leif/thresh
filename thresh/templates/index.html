@@ -1,8 +1,14 @@
-<h1>Current proposals</h1>
+{% extends "base.html" %}
+{% load i18n %}
 
+{% block content %}
+<h1> Proposals list </h1>
 <ul>
  {% for proposal in proposals %}
     <li>{{ proposal.created }} {{ proposal.title }} ({{ proposal.threshold }} {{ proposal.currency.code }} total; {{ proposal.get_percent_backed|floatformat:2 }}% backed) [<a href="/pledge/{{proposal.id}}">pledge</a>]</li>
  {% endfor %}
 </ul>
+
 {% include "create.html" %}
+
+{% endblock %}
