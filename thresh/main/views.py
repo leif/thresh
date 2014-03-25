@@ -1,8 +1,7 @@
 from django.template import Context
 from django.http import HttpResponseRedirect
 from django.forms import ModelForm
-from django.core.context_processors import csrf
-from django.shortcuts import render_to_response
+from django.shortcuts import render, redirect
 
 from registration.backends.simple.views import RegistrationView \
     as _RegistrationView
@@ -16,22 +15,21 @@ class ProposalForm( ModelForm ):
 
 def index(request):
     proposals = Proposal.objects.all().order_by('-created')
-    c = Context( dict(
+    return render(request, 'index.html', dict(
         proposals       = proposals,
         creationForm    = ProposalForm()
-        ) )
-    c.update(csrf(request))
-    return render_to_response( 'index.html', c )
+        ))
 
 def create(request):
-    form = ProposalForm(request.POST)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect('/')
+    if request.method == 'POST':
+        form = ProposalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+
     else:
-        c = Context( dict( creationForm = form ) )
-        c.update(csrf(request))
-        return render_to_response( 'create.html', c )
+        form = ProposalForm()
+    return render( request, 'create.html', dict( creationForm = form ) )
 
 
 class RegistrationView(_RegistrationView):
