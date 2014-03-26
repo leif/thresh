@@ -1,21 +1,26 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.auth.decorators import login_required
 
-from thresh.main.views import RegistrationView
+from thresh.main.views import RegistrationView,  ProposalCreateView, \
+    ProposalList
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'thresh.main.views.index', name='index'),
-    url(r'^create$', 'thresh.main.views.create', name='create'),
-
+    # FIXME: change url to proposal/list?
+    url(r'^$', ProposalList.as_view(), name='index'),
+    # FIXME: change url to proposal/create?
+    url(r'^create$',  login_required(ProposalCreateView.as_view()),  name='proposal_create'), 
+ 
     # Examples:
     # url(r'^thresh/', include('thresh.foo.urls')),
 
     # django-registration
     # this url has to be before accounts/ to take precedence
     url(r'^accounts/register/$', RegistrationView.as_view(),
+        #{ 'profile_callback': Person.objects.create },
         name='registration_register'),
     # FIXME: for development only, use one-step backend,
     url(r'^accounts/', include('registration.backends.simple.urls')),

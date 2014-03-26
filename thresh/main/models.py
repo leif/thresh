@@ -1,5 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser,  BaseUserManager
+
+#FIXME: logging settings
+import logging
+logger = logging.getLogger(__name__)
 
 class Currency(models.Model):
     code   = models.CharField(max_length=3, unique=True)
@@ -7,14 +11,16 @@ class Currency(models.Model):
     def __unicode__(self):
         return self.name
 
-class Person(User):
+
+class Person(AbstractUser):
+
     def get_balance(self, currency):
         return sum( tx.amount for tx in self.transaction_set.filter(currency=currency) )
 
 class Proposal(models.Model):
     title       = models.CharField(max_length=48)
     description = models.CharField(max_length=200)
-    creator     = models.ForeignKey(Person)
+    creator     = models.ForeignKey(Person, editable=False)
     threshold   = models.IntegerField()
     currency    = models.ForeignKey(Currency, default=1)
     created     = models.DateTimeField('date created', auto_now_add=True)
@@ -22,6 +28,7 @@ class Proposal(models.Model):
 
     def get_percent_backed(self):
         return sum( pledge.amount for pledge in self.pledge_set.all() if pledge.is_backed() ) / float( self.threshold )
+
 
 class Pledge(models.Model):
     proposal = models.ForeignKey(Proposal)

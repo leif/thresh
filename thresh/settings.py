@@ -125,7 +125,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'thresh.main',
     'dummyadmin',
-    'registration'
+    'registration', 
 )
 
 # A sample logging configuration. The only tangible logging
@@ -176,10 +176,14 @@ ROOT_PRJ_PATH = os.path.normpath(os.path.join(PRJ_PATH, '..'))
 # git submodule update
 REGISTRATION_TEMPLATE_DIR = os.path.join(
     ROOT_PRJ_PATH,
-    "django-registration-templates"
+    "django-registration-templates",
 )
 
 TEMPLATE_DIRS = (
     os.path.join(PRJ_PATH, "templates"),
     REGISTRATION_TEMPLATE_DIR,
 )
+
+# to override the default User model and create instances of Person 
+# when creating instances of User
+AUTH_USER_MODEL = 'main.Person'
