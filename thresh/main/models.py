@@ -18,7 +18,7 @@ class Person(AbstractUser):
         return sum( tx.amount for tx in self.transaction_set.filter(currency=currency) )
 
 class Proposal(models.Model):
-    title       = models.CharField(max_length=48)
+    title       = models.CharField(max_length=48, unique=True)
     description = models.CharField(max_length=200)
     creator     = models.ForeignKey(Person, editable=False)
     threshold   = models.IntegerField()
