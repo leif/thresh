@@ -34,7 +34,7 @@ class Pledge(models.Model):
     proposal = models.ForeignKey(Proposal)
     person   = models.ForeignKey(Person)
     amount   = models.IntegerField()
-    created  = models.DateTimeField('date created')
+    created  = models.DateTimeField('date created', auto_now_add=True)
 
     def is_backed(self):
         return self.amount <= self.person.get_balance(self.proposal.currency)
