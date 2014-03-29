@@ -168,15 +168,8 @@ ROOT_PRJ_PATH = os.path.normpath(os.path.join(PRJ_PATH, '..'))
 # thresh/thresh/main
 # APP_PATH = os.path.normpath(os.path.join(PRJ_PATH, 'main'))
 
-# for https://github.com/macdhuibh/django-registration-templates
-# django-registration-templates is expected to be inside project root directory
-# and can be added running:
-# git submodule init
-# git submodule update
-REGISTRATION_TEMPLATE_DIR = os.path.join(
-    ROOT_PRJ_PATH,
-    "django-registration-templates",
-)
+# for https://github.com/yourcelf/django-registration-defaults
+from registration_defaults.settings import *
 
 TEMPLATE_DIRS = (
     os.path.join(PRJ_PATH, "templates"),

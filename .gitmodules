@@ -1,3 +1,0 @@
-[submodule "django-registration-templates"]
-	path = django-registration-templates
-	url = https://github.com/macdhuibh/django-registration-templates.git

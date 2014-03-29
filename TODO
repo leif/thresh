@@ -4,8 +4,3 @@
  * mv this TODO to the directory above the django application
  * create setup.py for the application
 
-* django-registration-templates: fork it and create setup.py so it can be just installed with the requirements instead of having a git submodule
-
-* django-registration: using https://bitbucket.org/mszamot/django-registration/commits/df2a8e1c46a2, instead of pypi django-registration from https://bitbucket.org/ubernostrum/django-registration, until pull request 58 (https://bitbucket.org/ubernostrum/django-registration/pull-request/58/compatibility-with-custom-user-mode-in/diff) is accepted, to have compatibility with custom user models
-
-* pledge: restrict the number of pledges that the same user can do to the same proposal and add update pledge instead?
