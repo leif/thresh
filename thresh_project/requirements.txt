@@ -1,11 +1,11 @@
 Django==1.6.2
 #django-registration==1.0
 # FIXME: use this repo until pull request 58 is accepted (ttps://bitbucket.org/ubernostrum/django-registration/pull-request/58/compatibility-with-custom-user-mode-in/diff)
--e hg+https://bitbucket.org/mszamot/django-registration/commits/df2a8e1c46a2#egg=django-registration
+-e hg+https://bitbucket.org/mszamot/django-registration/commits/df2a8e1c46a2#egg=django-registration#egg=django-registration
 
 # use this repo instead of https://github.com/macdhuibh/django-registration-templates
 # as this has setup.py and can be installed instead of cloning with git submodules
--e git+https://github.com/yourcelf/django-registration-defaults
+-e git+https://github.com/yourcelf/django-registration-defaults#egg=django-registration-defaults
 # there are also registration templates in the repos:
 # https://github.com/ofcourseican/django-registration-basic-templates and
 # https://github.com/ebertti/django-registration-bootstrap
