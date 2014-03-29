@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>Account detail</h1>
+{{object}}
+{% comment %}
+{% with 'transaction_list' as object_list %}
+    {% include "main/transaction_list_inline.html" %}
+{% endwith %}
+{% endcomment %}
+
+{% include "main/transaction_list_inline.html" %}
+
+<h2>Balance </h2>
+<ul>
+ {% for currency, amount in balance_dict.items %}
+    <li>{{ currency }} {{ amount }}</li>
+ {% endfor %}
+</ul>
+
+<a href="{% url 'transaction_create' %}">{% trans "Add balance" %}</a>
+
+{% endblock %}

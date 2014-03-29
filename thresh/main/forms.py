@@ -1,6 +1,6 @@
 from django.forms import ModelForm,  HiddenInput,  ValidationError
 
-from thresh.main.models import Pledge
+from thresh.main.models import Pledge,  Transaction
 
 #FIXME: logging settings
 import logging
@@ -18,9 +18,7 @@ class PledgeForm(ModelForm):
             'person': HiddenInput()
         }
 
-    # FIXME: find better way to validate is_backed
-    # can't use is_backed here as the pledge object isn't created yet
-    # and this'll raise validation errors before is created
+    # FIXME
     def clean(self):
         cleaned_data = super(PledgeForm, self).clean()
         person = cleaned_data.get("person")
@@ -28,7 +26,20 @@ class PledgeForm(ModelForm):
         proposal = cleaned_data.get('proposal')
         if not pledge_is_backed(amount,  person,  proposal):        
             raise ValidationError("Insufficient balance, "
-                    "pledge with an smaller amount up to your current balance (%s) "
-                    "or add more balance to your account."
+                    "pledge with an smaller amount up to your current balance "
+                    "(%s) or add more balance to your account."
                     % person.get_balance(proposal.currency))
+        # FIXME
+        backed = proposal.is_gonna_be_backed_by(amount)
+        if backed > 0:
+            raise ValidationError("Proposal is gonna be backed by %s %s."
+                    "Pledge with %s" % (backed, 
+                                      proposal.currency.code, 
+                                      proposal.needs_amount_to_be_backed() ))
+
+
+class CurrentPersonTransactionForm(ModelForm):
+    class Meta:
+        model = Transaction
+        exclude = ('pledge', 'description')
 

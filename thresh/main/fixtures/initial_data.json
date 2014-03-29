@@ -18,8 +18,67 @@
         "name": "US Dollars",
         "code": "USD" } },
   {
-    "model": "main.Person",
+    "pk": 1, 
+    "model": "main.person", 
     "fields": {
-        "username": "Someone",
-        "password": "pass" } }
+        "username": "admin", 
+        "is_active": true, 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "password": "pbkdf2_sha256$12000$Ycfp0z9Zl9Ka$N3beWx5S6ikMkl4n4//oSHaP4ljhhpU0VVnftPvt0ck=",
+        "email": "admin@mail.com"}},
+  {
+    "model": "main.Person",
+    "pk"   : 2,
+    "fields": {
+        "username": "foo",
+        "password": "pbkdf2_sha256$12000$3mALffH1s8Wa$9xC5nkForbb+4h2zMIzLJ62vP/nk1a57Jk7B8WGENyA=",
+        "email": "foo@mail.com" } },
+  {
+    "model": "main.Proposal",
+    "pk"   : 1,
+    "fields": {
+        "expires": null, 
+        "description": "thresh",
+        "creator": 1,
+        "created": "2014-03-26T21:53:45.451Z",
+        "currency": 1,
+        "threshold": 10,
+        "title": "thresh" } },
+  {
+    "pk"   : 1,
+    "model": "main.pledge", 
+    "fields": {
+        "person": 1,
+        "proposal": 1,
+        "amount": 2,
+        "created": "2014-03-27T15:38:38.516Z"}},
+  {
+    "pk"   : 2,
+    "model": "main.pledge", 
+    "fields": {
+        "person": 2,
+        "proposal": 1,
+        "amount": 10,
+        "created": "2014-03-27T15:38:38.516Z"}},
+  {
+     "pk"   : 1,
+     "model": "main.transaction",
+     "fields": {
+        "pledge": null,
+        "currency": 1,
+        "datetime": "2014-03-28T16:35:45.000Z",
+        "person": 1,
+        "amount": 10,
+        "description": "initial balance"}},
+  {
+     "pk"   : 2,
+     "model": "main.transaction",
+     "fields": {
+        "pledge": null,
+        "currency": 1,
+        "datetime": "2014-03-28T16:35:45.000Z",
+        "person": 2,
+        "amount": 20,
+        "description": "initial balance"}}
 ]

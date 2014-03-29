@@ -2,7 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
 from thresh.main.views import RegistrationView,  ProposalCreateView, \
-    ProposalList, PledgeCreateView
+    ProposalList, PledgeCreateView,  CurrentPersonTransactionCreateView,  \
+    CurrentPersonDetailView, CurrentPersonTransactionList
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -19,6 +20,14 @@ urlpatterns = patterns('',
     url(r'(?P<proposal_id>\d+)/pledge/$',
         login_required(PledgeCreateView.as_view()),
         name='pledge_create'),
+
+    url(r'^me/transaction/add$',
+        login_required(CurrentPersonTransactionCreateView.as_view()),
+        name='transaction_create'), 
+
+    url(r'^me/$',
+        login_required(CurrentPersonDetailView.as_view()),
+        name='current_person_detail'), 
 
     # Examples:
     # url(r'^thresh/', include('thresh.foo.urls')),
