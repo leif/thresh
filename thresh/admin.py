@@ -1,4 +1,4 @@
-from thresh.main.models import Proposal, Person, Pledge, Transaction
+from thresh.models import Proposal, Person, Pledge, Transaction
 from django.contrib import admin
 
 admin.site.register(Proposal)

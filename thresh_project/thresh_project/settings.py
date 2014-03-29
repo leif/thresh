@@ -101,10 +101,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'thresh.urls'
+ROOT_URLCONF = 'thresh_project.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'thresh.wsgi.application'
+WSGI_APPLICATION = 'thresh_project.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -123,7 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'thresh.main',
+    'thresh',
     'registration', 
 )
 
@@ -161,12 +161,15 @@ LOGGING = {
 LOGIN_REDIRECT_URL = 'index'
 
 # Project and application paths
-# thresh/thresh/settings.py
+# django-thresh/thresh_project/thresh_project/settings.py
 PRJ_PATH = os.path.dirname(__file__)
-# thresh
+# django-thresh/thresh_project
 ROOT_PRJ_PATH = os.path.normpath(os.path.join(PRJ_PATH, '..'))
-# thresh/thresh/main
-# APP_PATH = os.path.normpath(os.path.join(PRJ_PATH, 'main'))
+
+# django-thresh
+REPO_PATH = os.path.normpath(os.path.join(ROOT_PRJ_PATH, '..'))
+# django/thresh
+# APP_PATH = os.path.normpath(os.path.join(REPO_PATH, 'main'))
 
 # for https://github.com/yourcelf/django-registration-defaults
 from registration_defaults.settings import *
@@ -178,4 +181,4 @@ TEMPLATE_DIRS = (
 
 # to override the default User model and create instances of Person 
 # when creating instances of User
-AUTH_USER_MODEL = 'main.Person'
+AUTH_USER_MODEL = 'thresh.Person'

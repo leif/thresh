@@ -1,6 +1,4 @@
 * repo structure refactoring
- * the django project (thresh) should be an example project (or submodule) instead of the root directory of the django application (main)
- * requirements.txt should be in the directory above the django application
- * mv this TODO to the directory above the django application
- * create setup.py for the application
-
+ * create setup.py, README, etc. for the application
+ * separate settings, requirements, urls, wsgi in separate files for production and development
+ * templates and urls could be moved to the application instead of having them in the project

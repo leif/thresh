@@ -1,6 +1,6 @@
 from django.forms import ModelForm,  HiddenInput,  ValidationError
 
-from thresh.main.models import Pledge,  Transaction
+from thresh.models import Pledge,  Transaction
 
 #FIXME: logging settings
 import logging

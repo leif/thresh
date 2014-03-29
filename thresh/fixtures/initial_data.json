@@ -1,25 +1,25 @@
 [
   {
-    "model": "main.Currency",
+    "model": "thresh.Currency",
     "pk"   : 1,
     "fields": {
         "name": "Bitcoin",
         "code": "BTC" } },
   {
-    "model": "main.Currency",
+    "model": "thresh.Currency",
     "pk"   : 2,
     "fields": {
         "name": "Euros",
         "code": "EUR" } },
   {
-    "model": "main.Currency",
+    "model": "thresh.Currency",
     "pk"   : 3,
     "fields": {
         "name": "US Dollars",
         "code": "USD" } },
   {
     "pk": 1, 
-    "model": "main.person", 
+    "model": "thresh.person", 
     "fields": {
         "username": "admin", 
         "is_active": true, 
@@ -28,14 +28,14 @@
         "password": "pbkdf2_sha256$12000$Ycfp0z9Zl9Ka$N3beWx5S6ikMkl4n4//oSHaP4ljhhpU0VVnftPvt0ck=",
         "email": "admin@mail.com"}},
   {
-    "model": "main.Person",
+    "model": "thresh.Person",
     "pk"   : 2,
     "fields": {
         "username": "foo",
         "password": "pbkdf2_sha256$12000$3mALffH1s8Wa$9xC5nkForbb+4h2zMIzLJ62vP/nk1a57Jk7B8WGENyA=",
         "email": "foo@mail.com" } },
   {
-    "model": "main.Proposal",
+    "model": "thresh.Proposal",
     "pk"   : 1,
     "fields": {
         "expires": null, 
@@ -47,7 +47,7 @@
         "title": "thresh" } },
   {
     "pk"   : 1,
-    "model": "main.pledge", 
+    "model": "thresh.pledge", 
     "fields": {
         "person": 1,
         "proposal": 1,
@@ -55,7 +55,7 @@
         "created": "2014-03-27T15:38:38.516Z"}},
   {
     "pk"   : 2,
-    "model": "main.pledge", 
+    "model": "thresh.pledge", 
     "fields": {
         "person": 2,
         "proposal": 1,
@@ -63,7 +63,7 @@
         "created": "2014-03-27T15:38:38.516Z"}},
   {
      "pk"   : 1,
-     "model": "main.transaction",
+     "model": "thresh.transaction",
      "fields": {
         "pledge": null,
         "currency": 1,
@@ -73,7 +73,7 @@
         "description": "initial balance"}},
   {
      "pk"   : 2,
-     "model": "main.transaction",
+     "model": "thresh.transaction",
      "fields": {
         "pledge": null,
         "currency": 1,

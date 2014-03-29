@@ -6,8 +6,8 @@ from django.views.generic import ListView,  DetailView
 from registration.backends.simple.views import RegistrationView \
     as _RegistrationView
 
-from thresh.main.models import Proposal, Person, Pledge, Transaction
-from thresh.main.forms import PledgeForm,  CurrentPersonTransactionForm
+from thresh.models import Proposal, Person, Pledge, Transaction
+from thresh.forms import PledgeForm,  CurrentPersonTransactionForm
 
 #FIXME: logging settings
 import logging

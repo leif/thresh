@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
-from thresh.main.views import RegistrationView,  ProposalCreateView, \
+from thresh.views import RegistrationView,  ProposalCreateView, \
     ProposalList, PledgeCreateView,  CurrentPersonTransactionCreateView,  \
     CurrentPersonDetailView, CurrentPersonTransactionList
 
