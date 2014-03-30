@@ -1,5 +1,6 @@
 # Django settings for thresh project.
 import os
+import logging
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -135,12 +136,32 @@ INSTALLED_APPS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'thresh': {
+            'format': '%(asctime)s %(levelname)s %(module)s %(message)s'
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
     'handlers': {
+        'null': {
+            'level': 'DEBUG',
+            'class': 'django.utils.log.NullHandler',
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'thresh'
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
@@ -148,11 +169,20 @@ LOGGING = {
         }
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+            'level': 'INFO',
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
+        'thresh': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        }
     }
 }
 
@@ -163,6 +193,7 @@ LOGIN_REDIRECT_URL = 'index'
 # Project and application paths
 # django-thresh/thresh_project/thresh_project/settings.py
 PRJ_PATH = os.path.dirname(__file__)
+
 # django-thresh/thresh_project
 ROOT_PRJ_PATH = os.path.normpath(os.path.join(PRJ_PATH, '..'))
 
@@ -178,6 +209,7 @@ TEMPLATE_DIRS = (
     os.path.join(PRJ_PATH, "templates"),
     REGISTRATION_TEMPLATE_DIR,
 )
+print TEMPLATE_DIRS
 
 # to override the default User model and create instances of Person 
 # when creating instances of User
