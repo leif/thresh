@@ -1,9 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,  BaseUserManager
 
-#FIXME: logging settings
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('thresh')
 
 class Currency(models.Model):
     code   = models.CharField(max_length=3, unique=True)
@@ -13,6 +12,11 @@ class Currency(models.Model):
 
 
 class Person(AbstractUser):
+
+
+    def __unicode__(self):
+        return self.username
+
 
     def get_balance(self, currency):
         return sum( tx.amount for tx in self.transaction_set.filter(currency=currency) )
@@ -30,6 +34,13 @@ class Person(AbstractUser):
         return self.transaction_set.all()
 
 
+    def get_pledge_on_proposal(self, proposal):
+        if self.pledge_set.filter(proposal=proposal):
+            return self.pledge_set.filter(proposal=proposal)[0]
+        else:
+            return None
+
+
 class Proposal(models.Model):
     title       = models.CharField(max_length=48, unique=True)
     description = models.CharField(max_length=200)
@@ -40,29 +51,38 @@ class Proposal(models.Model):
     expires     = models.DateTimeField('expiration date', null=True, blank=True)
 
 
-    # FIXME: all these functions aren't needed, change backed name
-    def pledge_amount(self):
-        return  sum( pledge.amount for pledge in self.pledge_set.all())
+    def __unicode__(self):
+        return self.title
+
+
+    def get_all_pledges(self):
+        return self.pledge_set.all()
+
+
+    def pledges_total_amount(self):
+        return  sum( pledge.amount for pledge in self.get_all_pledges() \
+                    if pledge.is_backed())
 
 
     def get_percent_backed(self):
-        return sum( pledge.amount for pledge in self.pledge_set.all() if pledge.is_backed() ) / float( self.threshold )
+        return sum( pledge.amount for pledge in self.get_all_pledges() \
+                   if pledge.is_backed() ) / float( self.threshold )
 
 
-    def is_backed(self):
-        return self.pledge_amount() >=  self.threshold
+    # FIXME: find better name for reach(ed) threshold methods
+    def reached_threshold(self):
+        return self.pledges_total_amount() >=  self.threshold
 
 
-    def is_gonna_be_backed(self,  amount):
-        return self.pledge_amount() + amount >=  self.threshold
+    def needs_amount_to_reach_threshold(self):
+        return self.threshold - self.pledges_total_amount()
 
 
-    def is_gonna_be_backed_by(self,  amount):
-        return self.pledge_amount() + amount -  self.threshold
-
-
-    def needs_amount_to_be_backed(self):
-        return self.threshold - self.pledge_amount()
+    def get_pledge_by_person(self,  person):
+        if self.pledge_set.filter(person=person):
+            return self.pledge_set.filter(person=person)[0]
+        else:
+            return None
 
 
 class Pledge(models.Model):
@@ -72,12 +92,17 @@ class Pledge(models.Model):
     created  = models.DateTimeField('date created', auto_now_add=True)
 
 
+    def __unicode__(self):
+        return '%s %s on %s by %s' % \
+            (self.amount, self.proposal.currency,  self.proposal, self.person)
+
+
     def is_backed(self):
         return self.amount <= self.person.get_balance(self.proposal.currency)
 
 
-    def proposal_is_backed(self):
-        return self.proposal.is_backed()
+    def proposal_reached_threshold(self):
+        return self.proposal.reached_threshold()
 
 
 class Transaction(models.Model):
@@ -88,3 +113,11 @@ class Transaction(models.Model):
     datetime    = models.DateTimeField('date', auto_now_add=True)
     pledge      = models.ForeignKey(Pledge, null=True, blank=True)
 
+
+    def __unicode__(self):
+        if self.pledge:
+            return '%s %s on %s by %s' % \
+            (self.amount, self.currency,  self.pledge, self.person)
+        else:
+            return '%s %sby %s' % \
+                (self.amount, self.currency, self.person)

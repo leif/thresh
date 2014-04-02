@@ -59,7 +59,7 @@
     "fields": {
         "person": 2,
         "proposal": 1,
-        "amount": 10,
+        "amount": 6,
         "created": "2014-03-27T15:38:38.516Z"}},
   {
      "pk"   : 1,

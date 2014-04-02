@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView,  UpdateView
 from django.views.generic import ListView,  DetailView
 
 from registration.backends.simple.views import RegistrationView \
@@ -9,9 +9,8 @@ from registration.backends.simple.views import RegistrationView \
 from thresh.models import Proposal, Person, Pledge, Transaction
 from thresh.forms import PledgeForm,  CurrentPersonTransactionForm
 
-#FIXME: logging settings
 import logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('thresh')
 
 
 class ProposalList(ListView):
@@ -19,11 +18,15 @@ class ProposalList(ListView):
     model = Proposal
     queryset = Proposal.objects.all().order_by('-created')
 
+
 class ProposalCreateView(CreateView):
 
     model = Proposal
-    # FIXME: use named urls
-    success_url = '/'
+
+
+    def get_success_url(self):
+        return reverse('index')
+
 
     # set field creater to the current logged in user
     def form_valid(self, form):
@@ -48,13 +51,43 @@ class PledgeCreateView(CreateView):
         # to instantiate it in the
         # form_valid method cause it is needed before,
         # in the form clean method,
-        # to validate pledge.is_backed
         person = self.request.user
         return {'proposal': proposal,  'person': person}
 
 
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Redirect to pledge update view if the pledge for this proposal and 
+        logged in person exists.
+        """
+        person = self.request.user
+        proposal = get_object_or_404(Proposal, pk=self.kwargs['proposal_id'])
+        pledge = person.get_pledge_on_proposal(proposal)
+        if pledge:
+            return redirect('pledge_update',
+                            proposal_id=proposal.id,
+                            pk=pledge.id)
+        return super(PledgeCreateView, self).dispatch(request, *args, **kwargs)
+
+
     def get_percent_backed(self):
         return sum( pledge.amount for pledge in self.pledge_set.all() if pledge.is_backed() ) / float( self.threshold )
+
+
+class PledgeUpdateView(UpdateView):
+    model = Pledge
+    form_class = PledgeForm
+
+
+    def get_success_url(self):
+        return reverse('index')
+
+
+    def get_initial(self, *args, **kwargs):
+        proposal = get_object_or_404(Proposal, pk=self.kwargs['proposal_id'])
+        person = self.request.user
+        return {'proposal': proposal,  'person': person}
+    
 
 class CurrentPersonTransactionCreateView(CreateView):
 
