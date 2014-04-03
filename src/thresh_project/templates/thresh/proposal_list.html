@@ -9,7 +9,11 @@
     <li>{{ proposal.created }} {{ proposal.title }} ({{ proposal.threshold }} 
     {{ proposal.currency.code }} total; 
     {{ proposal.get_percent_backed|floatformat:2 }}% backed) 
-    [<a href="{% url 'pledge_create' proposal.id %}">pledge</a>]</li>
+    {% if proposal.reached_threshold %}
+        [reached threshold]
+    {% else %}
+        [<a href="{% url 'pledge_create' proposal.id %}">pledge</a>]</li>
+    {% endif %}
  {% endfor %}
 </ul>
 

@@ -66,7 +66,7 @@ class Proposal(models.Model):
 
     def get_percent_backed(self):
         return sum( pledge.amount for pledge in self.get_all_pledges() \
-                   if pledge.is_backed() ) / float( self.threshold )
+                   if pledge.is_backed() ) * 100 / float( self.threshold )
 
 
     # FIXME: find better name for reach(ed) threshold methods
