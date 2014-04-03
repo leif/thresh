@@ -89,7 +89,7 @@ class Proposal(models.Model):
     # shouldn't be considered
     def pledges_amount_without_person_pledge(self, person):
         return  sum( pledge.amount for pledge in self.get_all_pledges() \
-                    if pledge.is_backed() and pledge.person != self.creator)
+                    if pledge.is_backed() and pledge.person != person)
 
 
     def update_pledge_needs_amount_to_reach_threshold(self, person):
