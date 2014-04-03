@@ -1,4 +1,5 @@
 from django.forms import ModelForm,  HiddenInput,  ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 from thresh.models import Pledge,  Transaction
 
@@ -29,21 +30,24 @@ class PledgeForm(ModelForm):
 
         #FIXME: add transaction_create url when balance is not enough
         if not pledge_is_backed(amount,  person,  proposal):        
-            raise ValidationError("Insufficient balance, "
+            raise ValidationError(_("Insufficient balance, "
                     "pledge with an smaller amount up to your current balance "
-                    "(%s) or add more balance to your account."
-                    % person.get_balance(proposal.currency))
+                    "(%(balance)s) or add more balance to your account."),
+                    code='insufficient balance', 
+                    params={'balance': person.get_balance(proposal.currency)},
+                    )
 
-        needs_amount_to_reach_threshold = \
-            proposal.needs_amount_to_reach_threshold()
-        if amount > needs_amount_to_reach_threshold:
+        needed_amount = \
+            proposal.update_pledge_needs_amount_to_reach_threshold(person)
+        if amount > needed_amount:
             raise ValidationError(
-                "This proposal only needs %s %s to reach the threshold."
-                "Pledge with an amount that is <= than %s" % \
-                (
-                    needs_amount_to_reach_threshold, 
-                    proposal.currency.code,
-                    needs_amount_to_reach_threshold))
+                _("This proposal only needs %(needed_amount)s %(currency)s to reach the threshold."
+                "Pledge with an amount that is <= than %(needed_amount)s"), 
+                code='amount will exceed threshold', 
+                params={'needed_amount': needed_amount, 
+                        'currency': proposal.currency.code},
+                )
+        return cleaned_data
 
 
 class CurrentPersonTransactionForm(ModelForm):

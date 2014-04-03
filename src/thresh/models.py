@@ -85,6 +85,18 @@ class Proposal(models.Model):
             return None
 
 
+    # when updating person pledge, the previous pledge amount by that person
+    # shouldn't be considered
+    def pledges_amount_without_person_pledge(self, person):
+        return  sum( pledge.amount for pledge in self.get_all_pledges() \
+                    if pledge.is_backed() and pledge.person != self.creator)
+
+
+    def update_pledge_needs_amount_to_reach_threshold(self, person):
+        return self.threshold - \
+                self.pledges_amount_without_person_pledge(person)
+
+
 class Pledge(models.Model):
     proposal = models.ForeignKey(Proposal)
     person   = models.ForeignKey(Person)
