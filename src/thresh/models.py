@@ -1,8 +1,29 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,  BaseUserManager
+from django.db import transaction
 
 import logging
 logger = logging.getLogger('thresh')
+
+
+@transaction.atomic
+def transfer_pledges_to_proposal(proposal):
+    for pledge in proposal.get_all_pledges():
+        # withdraw txs
+        tx = Transaction(person = pledge.person, 
+                         amount = -pledge.amount, 
+                         currency = proposal.currency, 
+                         description = 'withdraw', 
+                         pledge = pledge)
+        tx.save()
+    # deposit tx
+    tx = Transaction(person = proposal.creator, 
+                     amount = proposal.threshold, 
+                     currency = proposal.currency, 
+                     description = 'deposit')
+    tx.save()
+
+
 
 class Currency(models.Model):
     code   = models.CharField(max_length=3, unique=True)
@@ -117,6 +138,21 @@ class Pledge(models.Model):
         return self.proposal.reached_threshold()
 
 
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        logger.debug('pledge save')
+        logger.debug(self.amount)
+        logger.debug(self.proposal.needs_amount_to_reach_threshold())
+        if self.proposal.needs_amount_to_reach_threshold() <= self.amount:
+            logger.debug('proposal is gonna reach threshold')
+
+        super(Pledge, self).save(
+            force_insert, force_update, *args, **kwargs)
+
+        if self.proposal_reached_threshold():
+            logger.debug('proposal reached threshold')
+            transfer_pledges_to_proposal(self.proposal)
+
+
 class Transaction(models.Model):
     person      = models.ForeignKey(Person, editable=False)
     amount      = models.IntegerField()
@@ -128,8 +164,9 @@ class Transaction(models.Model):
 
     def __unicode__(self):
         if self.pledge:
-            return '%s %s on %s by %s' % \
-            (self.amount, self.currency,  self.pledge, self.person)
+            return '%s: %s %s on pledge %s by %s' % \
+            (self.description,  self.amount, self.currency,  self.pledge, 
+            self.person)
         else:
-            return '%s %sby %s' % \
-                (self.amount, self.currency, self.person)
+            return '%s: %s %s by %s' % \
+                (self.description,  self.amount, self.currency, self.person)
