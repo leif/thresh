@@ -8,19 +8,28 @@ logger = logging.getLogger('thresh')
 
 @transaction.atomic
 def transfer_pledges_to_proposal(proposal):
+    # withdraw txs
     for pledge in proposal.get_all_pledges():
-        # withdraw txs
-        tx = Transaction(person = pledge.person, 
-                         amount = -pledge.amount, 
-                         currency = proposal.currency, 
-                         description = 'withdraw', 
+        tx = Transaction(person = pledge.person,
+                         amount = -pledge.amount,
+                         currency = proposal.currency,
+                         description = 'withdraw %s %s from %s for %s' %
+                            (pledge.amount,
+                             proposal.currency,
+                             pledge.person,
+                             proposal
+                            ),
                          pledge = pledge)
         tx.save()
     # deposit tx
-    tx = Transaction(person = proposal.creator, 
-                     amount = proposal.threshold, 
-                     currency = proposal.currency, 
-                     description = 'deposit')
+    tx = Transaction(person = proposal.creator,
+                     amount = proposal.threshold,
+                     currency = proposal.currency,
+                     description = 'deposit %s %s on %s' %
+                        (proposal.threshold,
+                         proposal.currency,
+                         proposal.title)
+                    )
     tx.save()
 
 
@@ -61,6 +70,34 @@ class Person(AbstractUser):
         else:
             return None
 
+    def get_pledges(self):
+        return self.pledge_set.all()
+
+
+    def get_pending_pledges(self):
+        #return [p for p in self.pledge_set.all()i
+        #            if not p.proposal_reached_threshold()]
+        return [p for p in self.pledge_set.all()
+                    if not p.transaction_set.all()]
+
+    def get_completed_pledges(self):
+        #return [p for p in self.pledge_set.all()
+        #            if p.proposal_reached_threshold()]
+        return [p for p in self.pledge_set.all()
+                    if p.transaction_set.all()]
+
+
+    def get_proposals(self):
+        return self.proposal_set.all()
+
+
+    def get_pending_proposals(self):
+        return [p for p in self.proposal_set.all() if not p.reached_threshold()]
+
+
+    def get_completed_proposals(self):
+        return [p for p in self.proposal_set.all() if p.reached_threshold()]
+
 
 class Proposal(models.Model):
     title       = models.CharField(max_length=48, unique=True)
@@ -70,6 +107,8 @@ class Proposal(models.Model):
     currency    = models.ForeignKey(Currency, default=1)
     created     = models.DateTimeField('date created', auto_now_add=True)
     expires     = models.DateTimeField('expiration date', null=True, blank=True)
+    # FIXME: might be useful to add completed boolean field, that is set to
+    # true when the thershold is reached and the transactions are performed
 
 
     def __unicode__(self):
@@ -90,7 +129,13 @@ class Proposal(models.Model):
                    if pledge.is_backed() ) * 100 / float( self.threshold )
 
 
-    # FIXME: find better name for reach(ed) threshold methods
+    # FIXME: find better name for reach(ed) threshold methods => completed?
+    # FIXME: we could differenciate reached_threshold from complete with other
+    # function that checks that all pledges on the proposal were withdrawed
+    # (have transactions)
+    # If Transaction would have relation to proposal, we could also check if
+    # there was a deposit transaction for the proposal
+    # Or just add the boolean completed field
     def reached_threshold(self):
         return self.pledges_total_amount() >=  self.threshold
 
@@ -123,6 +168,7 @@ class Pledge(models.Model):
     person   = models.ForeignKey(Person)
     amount   = models.IntegerField()
     created  = models.DateTimeField('date created', auto_now_add=True)
+    # FIXME: might be useful to add completed boolean field
 
 
     def __unicode__(self):
@@ -134,8 +180,20 @@ class Pledge(models.Model):
         return self.amount <= self.person.get_balance(self.proposal.currency)
 
 
+    # FIXME: find better name for reach(ed) threshold methods => completed?
+    # same comment as for Proposal...
     def proposal_reached_threshold(self):
         return self.proposal.reached_threshold()
+
+
+    # see comment for previos function
+    def is_completed(self):
+        if self.transaction_set.all(): return True
+        return False
+
+
+    def get_proposal_currency(self):
+        return self.proposal.currency
 
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
@@ -159,14 +217,15 @@ class Transaction(models.Model):
     currency    = models.ForeignKey(Currency, default=1)
     description = models.CharField(max_length=200, null=True, blank=True)
     datetime    = models.DateTimeField('date', auto_now_add=True)
+    # FIXME: this could be change to OneToOne
     pledge      = models.ForeignKey(Pledge, null=True, blank=True)
+    # FIXME: might be useful to add proposal OneToOne field
 
 
     def __unicode__(self):
         if self.pledge:
-            return '%s: %s %s on pledge %s by %s' % \
-            (self.description,  self.amount, self.currency,  self.pledge, 
-            self.person)
+            return 'pledge: %s' % \
+            (self.pledge,)
         else:
             return '%s: %s %s by %s' % \
                 (self.description,  self.amount, self.currency, self.person)

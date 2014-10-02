@@ -6,14 +6,9 @@
 <h1> Proposals list </h1>
 <ul>
  {% for proposal in object_list %}
-    <li>{{ proposal.created }} {{ proposal.title }} ({{ proposal.threshold }} 
-    {{ proposal.currency.code }} total; 
-    {{ proposal.get_percent_backed|floatformat:2 }}% backed) 
-    {% if proposal.reached_threshold %}
-        [reached threshold]
-    {% else %}
-        [<a href="{% url 'pledge_create' proposal.id %}">pledge</a>]</li>
-    {% endif %}
+   <li>
+     {% include 'thresh/__proposal_detail.html' %}
+   </li>
  {% endfor %}
 </ul>
 

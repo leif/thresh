@@ -3,14 +3,69 @@
 
 {% block content %}
 <h1>Account detail</h1>
-{{object}}
-{% comment %}
-{% with 'transaction_list' as object_list %}
-    {% include "main/transaction_list_inline.html" %}
-{% endwith %}
-{% endcomment %}
 
-{% include "thresh/transaction_list_inline.html" %}
+{{object}}
+
+{% if object.get_proposals %}
+  <h2>Proposals</h2>
+  <ul>
+    {% for proposal in object.get_proposals %}
+    <li>
+    {% include 'thresh/__proposal_detail.html' %}
+    </li>
+  {% endfor %}
+  </ul>
+
+  {% comment %}
+  {% if object.get_pending_proposals %}
+    <h3>Proposal that has not reached threshold </h3>
+    {% for proposal in object.get_pending_proposals %}
+      {{ proposal }}
+    {% endfor %}
+  {% endif %}
+  {% if object.get_completed_proposals %}
+    <h3>Proposal that reached threshold </h3>
+    {% for proposal in object.get_completed_proposals %}
+      {{ proposal }}
+    {% endfor %}
+  {% endif %}
+  {% endcomment %}
+{% endif %}
+
+{% if object.get_pledges %}
+  <h2>Pledges</h2>
+  <ul>
+    {% for pledge in object.get_pledges %}
+      <li>
+        {{pledge.created}} {{ pledge.amount }} ({{pledge.proposal.currency}}) 
+        on {{pledge.proposal}} 
+        {% if pledge.proposal_reached_threshold %}[completed] 
+        {% else%} [pending] 
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% comment %}
+  {% if object.get_pending_pledges %}
+    <h3>Pending pledges</h3>
+    {% for pledge in object.get_pending_pledges %}
+      {{ pledge }}
+    {% endfor %}
+  {% endif %}
+  {% if object.get_completed_pledges %}
+    <h3>Completed pledges </h3>
+    {% for pledge in object.get_completed_pledges %}
+      {{ pledge }}
+    {% endfor %}
+  {% endif %}
+  {% endcomment %}
+
+{% endif %}
+
+{% if transaction_list %}
+  {% include "thresh/__transaction_list.html" %}
+{% endif %}
 
 <h2>Balance </h2>
 <ul>

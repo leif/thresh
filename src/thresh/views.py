@@ -19,6 +19,10 @@ class ProposalList(ListView):
     queryset = Proposal.objects.all().order_by('-created')
 
 
+class ProposalDetailView(DetailView):
+    model = Proposal
+
+
 class ProposalCreateView(CreateView):
 
     model = Proposal
@@ -32,7 +36,8 @@ class ProposalCreateView(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.creator = self.request.user
-        return super(ProposalCreateView, self).form_valid(form) 
+        logger.debug("Creating proposal")
+        return super(ProposalCreateView, self).form_valid(form)
 
 
 class PledgeCreateView(CreateView):
@@ -46,7 +51,7 @@ class PledgeCreateView(CreateView):
 
     def get_initial(self, *args, **kwargs):
         proposal = get_object_or_404(Proposal, pk=self.kwargs['proposal_id'])
-        
+
         # person object is passed as a hidden input to the form instead of
         # to instantiate it in the
         # form_valid method cause it is needed before,
@@ -57,16 +62,18 @@ class PledgeCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         """
-        Redirect to pledge update view if the pledge for this proposal and 
+        Redirect to pledge update view if the pledge for this proposal and
         logged in person exists.
         """
         person = self.request.user
         proposal = get_object_or_404(Proposal, pk=self.kwargs['proposal_id'])
         pledge = person.get_pledge_on_proposal(proposal)
         if pledge:
+            logger.debug('pledge already exists, redirecting to update plege')
             return redirect('pledge_update',
                             proposal_id=proposal.id,
                             pk=pledge.id)
+        logger.debug('creating pledge')
         return super(PledgeCreateView, self).dispatch(request, *args, **kwargs)
 
 
@@ -77,6 +84,7 @@ class PledgeCreateView(CreateView):
 class PledgeUpdateView(UpdateView):
     model = Pledge
     form_class = PledgeForm
+    template_name = 'thresh/pledge_update_form.html'
 
 
     def get_success_url(self):
@@ -87,7 +95,7 @@ class PledgeUpdateView(UpdateView):
         proposal = get_object_or_404(Proposal, pk=self.kwargs['proposal_id'])
         person = self.request.user
         return {'proposal': proposal,  'person': person}
-    
+
 
 class CurrentPersonTransactionCreateView(CreateView):
 

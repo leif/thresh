@@ -2,3 +2,18 @@
  * create setup.py, README, etc. for the application
  * separate settings, requirements, urls, wsgi in separate files for production and development
  * templates and urls could be moved to the application instead of having them in the project
+
+* proposal
+ * add status (pending, completed, expired, cancelled field?
+ * implement cancelation?
+ * show list of pledges, amount and person if pledge is not anonymous
+
+* pledge
+ * check when one proposal gets completed pledges that gets unbacked
+ * add anonymous field? so that the person can decide if her name doen't appear in the list of pledges in proposal
+
+* remove from user interface possibility to use other currencies
+
+* implement payment methods
+
+* add forum linked to proposal?

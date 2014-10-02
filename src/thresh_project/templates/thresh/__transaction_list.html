@@ -1,8 +1,8 @@
-<h2> Transaction list </h2>
+<h2> All transactions </h2>
 <ul>
  {% for transaction in transaction_list %}
     <li>{{ transaction.datetime }} {{ transaction.amount }}
-    ({{ transaction.currency.code }})
+    ({{ transaction.currency.code }}) {{transaction.description}}
     {% if transaction.pledge %}
         pledge {{transaction.pledge.amount}} on proposal {{transaction.pledge.proposal}}
     {% endif %}

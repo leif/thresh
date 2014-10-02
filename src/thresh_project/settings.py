@@ -125,7 +125,9 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'thresh',
-    'registration', 
+    'registration',
+
+    'django_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -211,6 +213,6 @@ TEMPLATE_DIRS = (
 )
 print TEMPLATE_DIRS
 
-# to override the default User model and create instances of Person 
+# to override the default User model and create instances of Person
 # when creating instances of User
 AUTH_USER_MODEL = 'thresh.Person'
