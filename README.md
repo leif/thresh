@@ -19,7 +19,7 @@ additional obligations with each new offer they make.
 * **Offer**
  * A supporter's offer of support to a proposal, contingent upon the proposal
    reaching its funding goal. Similar to (but not the same as) a *pledge* on
-   Kickstarter. 
+   Kickstarter.
 
 * **Intermediary**
  * The entity running the Thresh service.
@@ -33,7 +33,7 @@ which can be fulfilled using funds that the supporter has deposited. All
 offers must be backed when they are created.
 
 The funds stored with the intermediary can be used to make backed offers to an
-unlimited number of proposals. 
+unlimited number of proposals.
 
 Proposals are funded when the sum of their backed offers reaches their goal.
 
@@ -165,7 +165,7 @@ less which they've previously made to other proposals).
 
  * That's up to the operator of the service (the intermediary), but Thresh is
    designed to be operable as a free service.
-  
+
 * Do I have to use BTC (bitcoin)?
 
  * No. We are implementing Bitcoin first, but intend to have modular support
@@ -228,3 +228,15 @@ less which they've previously made to other proposals).
    it. This is a funding model for the post-artificial-scarcity future. And
    truthfully, one of the goals is to beguile people into being
    philanthropists.
+
+
+## Installation
+
+TBD
+
+## License
+
+Thresh is copyright 2012-2014 by its authors (see file AUTHORS) and is licensed under [GNU GPL v3](https://gnu.org/licenses/gpl-3.0.txt) or any later release.
+
+
+
