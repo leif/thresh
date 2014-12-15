@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,  BaseUserManager
 from django.db import transaction
-
+from decimal import Decimal
 import logging
 logger = logging.getLogger('thresh')
 
@@ -103,7 +103,7 @@ class Proposal(models.Model):
     title       = models.CharField(max_length=48, unique=True)
     description = models.CharField(max_length=200)
     creator     = models.ForeignKey(Person, editable=False)
-    threshold   = models.IntegerField()
+    threshold   = models.DecimalField(decimal_places=8)  #Decimal('102020.3399').quantize(Decimal(2**-8),)
     currency    = models.ForeignKey(Currency, default=1)
     created     = models.DateTimeField('date created', auto_now_add=True)
     expires     = models.DateTimeField('expiration date', null=True, blank=True)

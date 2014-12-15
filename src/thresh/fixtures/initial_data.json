@@ -4,19 +4,22 @@
     "pk"   : 1,
     "fields": {
         "name": "Bitcoin",
-        "code": "BTC" } },
+        "code": "BTC",
+        "precision": "1e-8" } },
   {
     "model": "thresh.Currency",
     "pk"   : 2,
     "fields": {
         "name": "Euros",
-        "code": "EUR" } },
+        "code": "EUR" ,
+        "precision": "1e-2"} },
   {
     "model": "thresh.Currency",
     "pk"   : 3,
     "fields": {
         "name": "US Dollars",
-        "code": "USD" } },
+        "code": "USD",
+        "precision": "1e-2" } },
   {
     "pk": 1, 
     "model": "thresh.person", 
