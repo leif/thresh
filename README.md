@@ -2,7 +2,7 @@
 
 Thresh is a crowdfunding platform under development which allows people to
 make tangible offers of support for any number of proposals without incurring
-additional obligations with each offer.
+additional obligations with each new offer they make.
 
 **The code in this repository is an early prototype and not yet functional.**
 
@@ -28,7 +28,7 @@ additional obligations with each offer.
 
 Supporters deposit funds with the intermediary. The deposited funds can be
 offered to multiple proposals simultaneously. All offers to active proposals
-exist in one of two states: *backed*, or *un-backed*. Backed offers are offers
+exist in one of two states: *backed*, or *un-backed*. Backed offers are those
 which can be fulfilled using funds that the supporter has deposited. All
 offers must be backed when they are created.
 
@@ -37,9 +37,9 @@ unlimited number of proposals.
 
 Proposals are funded when the sum of their backed offers reaches their goal.
 
-When a proposal is funded, some offers to other proposals will become
-un-backed. A supporter's un-backed offers will expire after some period of time
-if they are not renewed with sufficient backing.
+When a proposal is funded, it will usually cause some offers to other proposals
+to become un-backed. These offers will expire after some period of time if the
+supporter does not renew them with sufficient backing.
 
 ## Motivation
 
@@ -56,13 +56,13 @@ relatively short funding periods (for example, a maximum of 60 days on
 Kickstarter) and most supporters cannot afford to pledge support to a large
 number of projects simultaneously.
 
-While the existing model has successfully provided funding for many projects,
-its necessarily short funding periods discourage ambitious or seemingly
-unlikely-to-succeed ideas from being supported or even proposed. Our hypothesis
-is that more ambitious proposals are achievable if they have enough time to
-mature in the right environment, and people will be willing to support them if
-the barrier of taking on additional obligation with each additional pledge is
-removed.
+While this model has successfully provided funding for many projects, its
+necessarily short funding periods discourage ambitious or seemingly
+unlikely-to-succeed ideas from being supported or even proposed. Our
+expectation is that more ambitious proposals are achievable if they have enough
+time to mature in the right environment, and people will be more willing to
+support them if the barrier of taking on additional obligation with each
+additional pledge is removed.
 
 ### Decision-making and task prioritization
 
